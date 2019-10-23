@@ -26,11 +26,13 @@ eureka:
         enabled: false # By default, the JHipster Registry is not used in the "dev" profile
         service-url:
             defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
+        fetch-registry: false
+        register-with-eureka: false
 
 spring:
     profiles:
         active: dev
-        include: swagger
+        include: swagger, no-liquibase
     devtools:
         restart:
             enabled: true
@@ -40,9 +42,9 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://localhost:3306/jhipster?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
-        password:
+        password: password1!
         hikari:
             data-source-properties:
                 cachePrepStmts: true
