@@ -1,0 +1,41 @@
+import org.gradle.internal.os.OperatingSystem
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'com.moowork.node'
+apply plugin: 'com.moowork.gulp'
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-devtools"
+}
+
+def profiles = 'dev'
+if (project.hasProperty('no-liquibase')) {
+    profiles += ',no-liquibase'
+}
+
+bootRun {
+    args = []
+}
+
+task gulpConstantDev(type: GulpTask) {
+    args = ["ngconstant:dev", "--no-notification"]
+}
+
+war {
+    webAppDirName = 'src/main/webapp/'
+}
+
+processResources {
+    filesMatching('**/application.yml') {
+        filter {
+            it.replace('#project.version#', version)
+        }
+    }
+    filesMatching('**/bootstrap.yml') {
+        filter {
+            it.replace('#spring.profiles.active#', profiles)
+        }
+    }
+}
+
+processResources.dependsOn gulpConstantDev
