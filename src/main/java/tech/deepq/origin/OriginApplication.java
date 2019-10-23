@@ -26,13 +26,13 @@ import java.util.Collection;
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
-public class JhipsterApp {
+public class OriginApplication {
 
-    private static final Logger log = LoggerFactory.getLogger(JhipsterApp.class);
+    private static final Logger log = LoggerFactory.getLogger(OriginApplication.class);
 
     private final Environment env;
 
-    public JhipsterApp(Environment env) {
+    public OriginApplication(Environment env) {
         this.env = env;
     }
 
@@ -63,7 +63,7 @@ public class JhipsterApp {
      * @throws UnknownHostException if the local host name could not be resolved into an address
      */
     public static void main(String[] args) throws UnknownHostException {
-        SpringApplication app = new SpringApplication(JhipsterApp.class);
+        SpringApplication app = new SpringApplication(OriginApplication.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         String protocol = "http";

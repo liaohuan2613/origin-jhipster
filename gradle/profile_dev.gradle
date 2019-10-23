@@ -1,8 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 
 apply plugin: 'org.springframework.boot'
-apply plugin: 'com.moowork.node'
-apply plugin: 'com.moowork.gulp'
 
 dependencies {
     compile "org.springframework.boot:spring-boot-devtools"
@@ -15,10 +13,6 @@ if (project.hasProperty('no-liquibase')) {
 
 bootRun {
     args = []
-}
-
-task gulpConstantDev(type: GulpTask) {
-    args = ["ngconstant:dev", "--no-notification"]
 }
 
 war {
@@ -37,5 +31,3 @@ processResources {
         }
     }
 }
-
-processResources.dependsOn gulpConstantDev

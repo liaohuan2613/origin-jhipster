@@ -1,6 +1,10 @@
 import org.gradle.internal.os.OperatingSystem
 
 buildscript {
+    ext {
+        querydslVersion = '4.1.4'
+        metaModelsSourcesDir = file("src/dslmeta")
+    }
     repositories {
         mavenLocal()
         jcenter()
@@ -21,7 +25,6 @@ plugins {
     id "net.ltgt.apt-idea" version "0.13"
     id "net.ltgt.apt" version "0.13"
     id "io.spring.dependency-management" version "1.0.3.RELEASE"
-    id "com.moowork.node" version "1.2.0"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
@@ -35,8 +38,6 @@ apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 apply plugin: 'propdeps'
-apply plugin: 'com.moowork.node'
-apply plugin: 'com.moowork.gulp'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 
@@ -110,7 +111,6 @@ task testReport(type: TestReport) {
 }
 
 
-apply from: 'gradle/yeoman.gradle'
 apply from: 'gradle/docker.gradle'
 apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/liquibase.gradle'
@@ -138,6 +138,15 @@ if (project.hasProperty('zipkin')) {
 configurations {
     providedRuntime
     compile.exclude module: "spring-boot-starter-tomcat"
+    querydslapt
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir metaModelsSourcesDir
+        }
+    }
 }
 
 repositories {
@@ -146,6 +155,8 @@ repositories {
 }
 
 dependencies {
+    compile "com.querydsl:querydsl-jpa:$querydslVersion"
+    compile "com.querydsl:querydsl-apt:$querydslVersion:jpa"
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "io.github.jhipster:jhipster"
     compile "io.dropwizard.metrics:metrics-core"
@@ -221,6 +232,23 @@ dependencies {
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
+task querymodels(type: JavaCompile, group: 'build') {
+    doFirst {
+        delete metaModelsSourcesDir;
+        metaModelsSourcesDir.mkdirs();
+    }
+
+    classpath = configurations.compile + configurations.querydslapt
+    destinationDir = metaModelsSourcesDir
+
+    source = sourceSets.main.java
+    options.compilerArgs = [
+        "-proc:only",
+        "-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor",
+        "-s", metaModelsSourcesDir
+    ]
+}
+
 task cleanResources(type: Delete) {
     delete 'build/resources'
 }
@@ -230,15 +258,6 @@ task wrapper(type: Wrapper) {
 }
 
 task stage(dependsOn: 'bootRepackage') {
-}
-
-if (project.hasProperty('nodeInstall')) {
-    node {
-        version = "${node_version}"
-        npmVersion = "${npm_version}"
-        yarnVersion = "${yarn_version}"
-        download = true
-    }
 }
 
 compileJava.dependsOn processResources
