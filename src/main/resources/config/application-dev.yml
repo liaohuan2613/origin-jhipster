@@ -88,6 +88,7 @@ secondary:
 
 sync-tasks:
     bond-cron: 0 0/1 * * * ?
+    bond-table-name: bond_target
 
 # ===================================================================
 # To enable SSL, generate a certificate using:

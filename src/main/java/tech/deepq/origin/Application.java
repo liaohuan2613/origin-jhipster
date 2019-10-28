@@ -26,13 +26,13 @@ import java.util.Collection;
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
-public class BondSyncApplication {
+public class Application {
 
-    private static final Logger log = LoggerFactory.getLogger(BondSyncApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     private final Environment env;
 
-    public BondSyncApplication(Environment env) {
+    public Application(Environment env) {
         this.env = env;
     }
 
@@ -63,7 +63,7 @@ public class BondSyncApplication {
      * @throws UnknownHostException if the local host name could not be resolved into an address
      */
     public static void main(String[] args) throws UnknownHostException {
-        SpringApplication app = new SpringApplication(BondSyncApplication.class);
+        SpringApplication app = new SpringApplication(Application.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         String protocol = "http";
