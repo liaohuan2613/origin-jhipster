@@ -42,7 +42,7 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        jdbc-url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
         password: password1!
         hikari:
@@ -78,17 +78,6 @@ spring:
 
 liquibase:
     contexts: dev
-
-secondary:
-    datasource:
-        type: com.zaxxer.hikari.HikariDataSource
-        jdbc-url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: root
-        password: password1!
-
-sync-tasks:
-    bond-cron: 0 0/1 * * * ?
-    bond-table-name: bond_target
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
